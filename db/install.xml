@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<XMLDB PATH="blocks/faq_list/db" VERSION="2024010400" COMMENT="XMLDB file for Moodle blocks/faq_list"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
+>
+    <TABLES>
+
+        <TABLE NAME="faq_list" COMMENT="FAQ list.">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="18" NOTNULL="true" SEQUENCE="true"/>
+                <FIELD NAME="shortname" TYPE="char" LENGTH="100" NOTNULL="true" SEQUENCE="false"/>
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="id" TYPE="primary" FIELDS="id"/>
+            </KEYS>
+            <INDEXES>
+                <INDEX NAME="id" UNIQUE="true" FIELDS="id"/>
+                <INDEX NAME="shortname" UNIQUE="true" FIELDS="shortname"/>
+            </INDEXES>
+        </TABLE>
+
+        <TABLE NAME="faq_list_title" COMMENT="Title translations for FAQ list.">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="18" NOTNULL="true" SEQUENCE="true"/>
+                <FIELD NAME="list_id" TYPE="int" LENGTH="18" NOTNULL="true" SEQUENCE="false"/>
+                <FIELD NAME="lang" TYPE="char" LENGTH="5" NOTNULL="true" SEQUENCE="false"/>
+                <FIELD NAME="title" TYPE="char" LENGTH="100" NOTNULL="true" SEQUENCE="false"/>
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="id" TYPE="primary" FIELDS="id"/>
+            </KEYS>
+            <INDEXES>
+                <INDEX NAME="id" UNIQUE="true" FIELDS="id"/>
+            </INDEXES>
+        </TABLE>
+
+        <TABLE NAME="faq_list_item" COMMENT="Questions and answers.">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="18" NOTNULL="true" SEQUENCE="true"/>
+                <FIELD NAME="list_id" TYPE="int" LENGTH="18" NOTNULL="true" SEQUENCE="false"/>
+                <FIELD NAME="lang" TYPE="char" LENGTH="5" NOTNULL="true" SEQUENCE="false"/>
+                <FIELD NAME="question" TYPE="text" LENGTH="medium" NOTNULL="false" SEQUENCE="false"/>
+                <FIELD NAME="answer" TYPE="text" LENGTH="medium" NOTNULL="false" SEQUENCE="false"/>
+                <FIELD NAME="answer_format" TYPE="int" LENGTH="2" NOTNULL="true" SEQUENCE="false"/>
+                <FIELD NAME="sortorder" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="id" TYPE="primary" FIELDS="id"/>
+            </KEYS>
+            <INDEXES>
+                <INDEX NAME="id" UNIQUE="true" FIELDS="id"/>
+            </INDEXES>
+        </TABLE>
+
+    </TABLES>
+
+</XMLDB>
