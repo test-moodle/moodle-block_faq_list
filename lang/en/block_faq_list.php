@@ -67,6 +67,7 @@ $string['label:faq_list_shortname_help'] = 'Enter unique name. Allowed character
 $string['label:faq_list_description'] = 'Description';
 $string['label:faq_list_description_help'] = 'Short description';
 $string['label:faq_list_delete_question'] = 'Do you want to delete FAQ list?';
+$string['label:faq_item_delete_question'] = 'Do you want to delete FAQ item?';
 $string['label:faq_question'] = 'Question';
 $string['label:faq_question_help'] = 'Write text for question.';
 $string['label:faq_answer'] = 'Answer';

@@ -41,12 +41,13 @@ $PAGE->set_url('/blocks/faq_list/view/faq_list_items.php');
 require_login();
 $PAGE->set_context(context_system::instance());
 
-
-//$faq_list = new faq_list();
 $faq_item = new faq_item();
+
+$action = optional_param('action', null, PARAM_ALPHA);
 
 $faq_list_id = optional_param('list_id', null, PARAM_INT);
 $faq_lang = optional_param('faq_lang', null, PARAM_ALPHA);
+$faq_item_id = optional_param('faq_item_id', null, PARAM_INT);
 
 if ($faq_list_id) {
     $faq_item->helper->set_last_edit_faq_list_id($faq_list_id);
@@ -54,6 +55,22 @@ if ($faq_list_id) {
 
 if ($faq_lang) {
     $faq_item->helper->set_last_edit_faq_lang($faq_lang);
+}
+
+if ($action) {
+    switch ($action) {
+        case 'moveitemdown':
+            if ($faq_item_id) {
+                $faq_item->movedown($faq_item_id);
+            };
+            break;
+        case 'moveitemup':
+            if($faq_item_id) {
+                $faq_item->moveup($faq_item_id);
+            }
+            break;
+    }
+    redirect($PAGE->url);
 }
 
 
@@ -73,20 +90,42 @@ $table = new html_table();
 
 $table->head = [
     get_string('label:col_faq_item', 'block_faq_list'),
+    '', // move down
+    '', // move up
     get_string('label:col_action_edit', 'block_faq_list'),
     get_string('label:col_action_delete', 'block_faq_list'),
 ];
 
 $table_rows = [];
 $records = $faq_item->get_items($current_list_id, $current_faq_lang);
+$faq_items_num = sizeof($records);
+$i = 0;
 
 foreach ($records as $id => $record) {
+    $i++;
+
+    $movedownicon = '';
+    $moveupicon = '';
 
     $url_param = [
         'faq_item_id' => $record->id,
     ];
 
     $view_url = new moodle_url('/blocks/faq_list/view/faq_item_manage.php', $url_param);
+
+    if($i < $faq_items_num) {
+        // Link to move down item.
+        $params = array_merge($url_param, ['action' => 'moveitemdown']);
+        $movedownlink = new moodle_url($PAGE->url, $params);
+        $movedownicon = $OUTPUT->action_icon($movedownlink, new \pix_icon('t/down', get_string('button:edit_faq_item', 'block_faq_list')));
+    }
+
+    if($i > 1) {
+        // Link to move down item.
+        $params = array_merge($url_param, ['action' => 'moveitemup']);
+        $moveuplink = new moodle_url($PAGE->url, $params);
+        $moveupicon = $OUTPUT->action_icon($moveuplink, new \pix_icon('t/up', get_string('button:edit_faq_item', 'block_faq_list')));
+    }
 
     // Link to edit faq item.
     $editlink = new moodle_url('/blocks/faq_list/view/faq_item_manage.php', $url_param);
@@ -104,6 +143,8 @@ foreach ($records as $id => $record) {
     $table_row = [
         //html_writer::link($view_url, $record->shortname),
         $question_answer,
+        $movedownicon,
+        $moveupicon,
         $editicon,
         $deleteicon,
     ];

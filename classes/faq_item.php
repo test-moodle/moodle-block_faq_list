@@ -92,11 +92,48 @@ class faq_item extends faq_list {
         return $this->DB->update_record($this->table_items, $faq_item_data);
     }
 
-/*
-        public function delete($id) {
-            $this->DB->delete_records($this->table, ['id' => $id]);
-            $this->DB->delete_records('block_faq_list_titles', ['group_id' => $id]);
-            $this->DB->delete_records('block_faq_list_qa', ['group_id' => $id]);
+    public function delete($item_id) {
+        $item = $this->get_by_id($item_id);
+        $curent_sortorder = $item->sortorder;
+
+        $this->DB->delete_records($this->table_items, ['id' => $item->id]);
+        $faq_items = $this->get_items($item->list_id, $item->lang);
+
+        foreach ($faq_items as $faq_item) {
+            if ( $faq_item->sortorder > $curent_sortorder) {
+                $faq_item->sortorder = $faq_item->sortorder - 1;
+                $this->DB->update_record($this->table_items, $faq_item);
+            }
         }
-    */
+    }
+
+    public function movedown($item_id) {
+        $item = $this->get_by_id($item_id);
+        $curent_sortorder = $item->sortorder;
+        $faq_items = $this->get_items($item->list_id, $item->lang);
+
+        foreach ($faq_items as $faq_item) {
+            if ( $faq_item->sortorder == $curent_sortorder + 1 ) {
+                $faq_item->sortorder = $curent_sortorder;
+                $this->DB->update_record($this->table_items, $faq_item);
+            }
+        }
+        $item->sortorder = $curent_sortorder + 1;
+        $this->DB->update_record($this->table_items, $item);
+    }
+
+    public function moveup($item_id) {
+        $item = $this->get_by_id($item_id);
+        $curent_sortorder = $item->sortorder;
+        $faq_items = $this->get_items($item->list_id, $item->lang);
+
+        foreach ($faq_items as $faq_item) {
+            if ( $faq_item->sortorder == $curent_sortorder - 1 ) {
+                $faq_item->sortorder = $curent_sortorder;
+                $this->DB->update_record($this->table_items, $faq_item);
+            }
+        }
+        $item->sortorder = $curent_sortorder - 1;
+        $this->DB->update_record($this->table_items, $item);
+    }
 }
