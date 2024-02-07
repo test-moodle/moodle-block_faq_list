@@ -63,11 +63,28 @@ class block_faq_list extends block_base {
         $faq_list = new faq_list();
         $faq_list_id = $this->config->faq_list_id;
         $show_title = (bool)$this->config->show_title['show_title'];
+        $display_type = $this->config->display_type;
+
         $template_context = $faq_list->export_faq_list_by_id($faq_list_id, $show_title);
 
         $renderer = $PAGE->get_renderer('core');
-        $content = $renderer->render_from_template('block_faq_list/faq_list', $template_context);
 
+        switch ($display_type) {
+            case 'type_2':
+                // Select template.
+                $template_name = 'block_faq_list/faq_list';
+                break;
+            case 'type_2':
+                // Select other template.
+                $template_name = 'block_faq_list/faq_list';
+                break;
+            default:
+                // Select default template.
+                $template_name = 'block_faq_list/faq_list';
+                break;
+
+        }
+        $content = $renderer->render_from_template($template_name, $template_context);
 
         $this->content = new stdClass();
         //$this->content->text = 'Simple text';
