@@ -49,9 +49,22 @@ class block_faq_list_edit_form extends block_edit_form {
         $mform->addGroup($show_title_choices, 'config_show_title', 'Display faq title');
         $mform->setType('config_show_title', PARAM_BOOL);
 
+        $display_choices = [
+            'default' => 'Default',
+            'type_1' => 'Prikaz moznosti 1',
+            'type_2' => 'Prikaz moznosti 2',
+        ];
+
+        $mform->addElement('select', 'config_display_type', get_string('label:config_display_type', 'block_faq_list'), $display_choices);
+        $mform->setType('config_display_type', PARAM_ALPHANUMEXT);
+
         if($has_config) {
             $mform->setDefault('faq_list_id',$has_config->faq_list_id);
             $mform->setDefault('show_title', (bool)$has_config->show_title);
+            $mform->setDefault('display_type', $has_config->display_type);
+        }
+        else {
+            //$mform->setDefault('display_type', 'default');
         }
     }
 

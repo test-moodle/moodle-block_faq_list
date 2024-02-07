@@ -62,6 +62,7 @@ $string['tab_faq_list_add_title'] = 'Create new FAQ list or edit existing one';
 // Form Labels.
 $string['label:config_faq_list_id'] = 'FAQ list';
 $string['label:config_show_title'] = 'Show FAQ list title';
+$string['label:config_display_type'] = 'Show FAQ list as';
 $string['label:faq_list_shortname'] = 'Unique shortname';
 $string['label:faq_list_shortname_help'] = 'Enter unique name. Allowed character are: [0-9][A-Z][a-z][_]';
 $string['label:faq_list_description'] = 'Description';
