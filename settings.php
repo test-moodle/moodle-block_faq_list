@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * general global plugin settings
+ * General global plugin settings
  *
  * File         settings.php
  * Encoding     UTF-8

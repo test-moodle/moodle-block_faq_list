@@ -30,9 +30,9 @@
 use block_faq_list\faq_list;
 use block_faq_list\forms\faq_list_delete_form;
 
-require ('../../../config.php');
-require_once("$CFG->libdir/formslib.php");
-require_once ($CFG->libdir.'/adminlib.php');
+require('../../../config.php');
+require_once($CFG->libdir . '/formslib.php');
+require_once($CFG->libdir . '/adminlib.php');
 
 global $CFG, $USER, $DB, $OUTPUT, $PAGE;
 
@@ -43,36 +43,33 @@ require_login();
 $PAGE->set_context(context_system::instance());
 $PAGE->set_pagelayout('admin');
 
-$faq_list = new faq_list();
+$faqlist = new faq_list();
 
-$faq_list_id = optional_param('list_id', null, PARAM_INT);
+$faqlistid = optional_param('list_id', null, PARAM_INT);
 
-$redirect_url  =new moodle_url('/blocks/faq_list/view/faq_lists.php', []);
+$redirecturl  = new moodle_url('/blocks/faq_list/view/faq_lists.php', []);
 
-if($faq_list_id) {
-    $faq_list_data = $faq_list->get_by_id($faq_list_id);
-    $faq_list_delete_form = new faq_list_delete_form();
-    $faq_list_delete_form->set_data($faq_list_data);
-}
-
-else {
-    $faq_list_delete_form = new faq_list_delete_form();
-    if ($faq_list_delete_form->is_cancelled()) {
-        redirect($redirect_url);
+if ($faqlistid) {
+    $faqlistdata = $faqlist->get_by_id($faqlistid);
+    $faqlistdeleteform = new faq_list_delete_form();
+    $faqlistdeleteform->set_data($faqlistdata);
+} else {
+    $faqlistdeleteform = new faq_list_delete_form();
+    if ($faqlistdeleteform->is_cancelled()) {
+        redirect($redirecturl);
     }
 }
 
-if ($data = $faq_list_delete_form->get_data()) {
-    // validation
-    if($data->id) {
-        $faq_list->delete($data->id);
-        redirect($redirect_url,
+if ($data = $faqlistdeleteform->get_data()) {
+    // Validation.
+    if ($data->id) {
+        $faqlist->delete($data->id);
+        redirect($redirecturl,
             get_string('msg_faq_list_deleted', 'block_faq_list'),
             0,
             'info');
-    }
-    else {
-        redirect($redirect_url,
+    } else {
+        redirect($redirecturl,
             get_string('msg_faq_list_not_exist', 'block_faq_list'),
             0,
             'error');
@@ -85,6 +82,6 @@ $PAGE->set_heading($header);
 
 echo $OUTPUT->header();
 
-$faq_list_delete_form->display();
+$faqlistdeleteform->display();
 
 echo $OUTPUT->footer();

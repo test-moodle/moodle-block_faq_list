@@ -55,40 +55,37 @@ class block_faq_list extends block_base {
      * @return stdClass
      */
     public function get_content() {
-        global $CFG, $DB, $USER, $PAGE;
         if ($this->content !== null) {
             return $this->content;
         }
 
-        $faq_list = new faq_list();
-        $faq_list_id = $this->config->faq_list_id;
-        $show_title = (bool)$this->config->show_title['show_title'];
-        $display_type = $this->config->display_type;
+        $faqlist = new faq_list();
+        $faqlistid = $this->config->faq_list_id;
+        $titleshow = (bool)$this->config->show_title['show_title'];
+        $displaytype = $this->config->display_type;
 
-        $template_context = $faq_list->export_faq_list_by_id($faq_list_id, $show_title);
+        $templatecontext = $faqlist->export_faq_list_by_id($faqlistid, $titleshow);
 
-        $renderer = $PAGE->get_renderer('core');
+        $renderer = $this->page->get_renderer('core');
 
-        switch ($display_type) {
+        switch ($displaytype) {
             case 'type_2':
                 // Select template.
-                $template_name = 'block_faq_list/faq_list';
+                $templatename = 'block_faq_list/faq_list';
                 break;
-            case 'type_2':
+            case 'type_1':
                 // Select other template.
-                $template_name = 'block_faq_list/faq_list';
+                $templatename = 'block_faq_list/faq_list';
                 break;
             default:
                 // Select default template.
-                $template_name = 'block_faq_list/faq_list';
+                $templatename = 'block_faq_list/faq_list';
                 break;
 
         }
-        $content = $renderer->render_from_template($template_name, $template_context);
+        $content = $renderer->render_from_template($templatename, $templatecontext);
 
         $this->content = new stdClass();
-        //$this->content->text = 'Simple text';
-        //$this->content->footer = 'Footer text';
 
         $this->content->text = $content;
 
@@ -101,7 +98,7 @@ class block_faq_list extends block_base {
      * @return array page-type prefix => true/false.
      */
     public function applicable_formats() {
-        return array('all' => true);
+        return ['all' => true];
     }
 
     /**

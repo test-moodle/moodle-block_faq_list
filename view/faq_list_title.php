@@ -31,9 +31,9 @@ use block_faq_list\faq_list;
 use block_faq_list\forms\faq_list_title_form;
 use core\output\notification;
 
-require ('../../../config.php');
-require_once("$CFG->libdir/formslib.php");
-require_once ($CFG->libdir.'/adminlib.php');
+require('../../../config.php');
+require_once($CFG->libdir . '/formslib.php');
+require_once($CFG->libdir . '/adminlib.php');
 
 global $CFG, $USER, $DB, $OUTPUT, $PAGE;
 
@@ -44,55 +44,49 @@ $PAGE->set_context(context_system::instance());
 
 $PAGE->set_pagelayout('admin');
 
-//$faq_list = new faq_list();
-$faq_list = new faq_list();
-$faq_title_form = new faq_list_title_form();
+$faqlist = new faq_list();
+$faqtitleform = new faq_list_title_form();
 
-$faq_title_id = optional_param('faq_title_id', null, PARAM_INT);
+$faqtitleid = optional_param('faq_title_id', null, PARAM_INT);
 
 $header = get_string('header:faq_title_management', 'block_faq_list');
 $PAGE->set_title($header);
 $PAGE->set_heading($header);
 
-$redirect_url  =new moodle_url('/blocks/faq_list/view/faq_list_items.php', []);
+$redirecturl  = new moodle_url('/blocks/faq_list/view/faq_list_items.php', []);
 
 
-if($faq_title_form->is_cancelled()) {
+if ($faqtitleform->is_cancelled()) {
     // Redirect to list of faq lists.
-    redirect($redirect_url);
-}
-
-elseif ($data = $faq_title_form->get_data()) {
-    // validation
-    if($data->id) {
-        $faq_list->update_title_translation($data->id, $data->title);
-        redirect($redirect_url,
+    redirect($redirecturl);
+} else if ($data = $faqtitleform->get_data()) {
+    // Validation.
+    if ($data->id) {
+        $faqlist->update_title_translation($data->id, $data->title);
+        redirect($redirecturl,
             get_string('msg_faq_title_updated', 'block_faq_list'),
             0,
             notification::NOTIFY_SUCCESS);
-    }
-    else {
-        $faq_list->add_title_translation($faq_list->helper->get_last_edit_faq_list_id(), $data->title,);
-        redirect($redirect_url,
+    } else {
+        $faqlist->add_title_translation($faqlist->helper->get_last_edit_faq_list_id(), $data->title);
+        redirect($redirecturl,
             get_string('msg_faq_title_created', 'block_faq_list'),
             0,
             notification::NOTIFY_SUCCESS);
     }
-
 }
 
-if ($faq_title_id) {
-    $existing_faq_title =  $faq_list->get_title_by_id($faq_title_id);
+if ($faqtitleid) {
+    $existingfaqtitle = $faqlist->get_title_by_id($faqtitleid);
 
     $data = new stdClass();
-    $data->id = $existing_faq_title->id;
-    $data->title = $existing_faq_title->title;
+    $data->id = $existingfaqtitle->id;
+    $data->title = $existingfaqtitle->title;
 
-    if($existing_faq_title) {
-        $faq_title_form->set_data($data);
-    }
-    else {
-        redirect($redirect_url,
+    if ($existingfaqtitle) {
+        $faqtitleform->set_data($data);
+    } else {
+        redirect($redirecturl,
             get_string('msg_faq_title_not_exist', 'block_faq_list'),
             0,
             notification::NOTIFY_ERROR
@@ -103,6 +97,6 @@ if ($faq_title_id) {
 
 echo $OUTPUT->header();
 
-$faq_title_form->display();
+$faqtitleform->display();
 
 echo $OUTPUT->footer();

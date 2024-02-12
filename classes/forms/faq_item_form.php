@@ -29,14 +29,17 @@
 
 namespace block_faq_list\forms;
 
+use coding_exception;
 use moodleform;
-
-defined('MOODLE_INTERNAL') || die();
 
 class faq_item_form extends moodleform {
 
-    protected function definition()
-    {
+    /**
+     * Form definitions.
+     * @return void
+     * @throws coding_exception
+     */
+    protected function definition() {
         $mform = $this->_form;
 
         // Existing faq_item id.
@@ -51,17 +54,17 @@ class faq_item_form extends moodleform {
         $mform->addHelpButton('question', 'label:faq_question', 'block_faq_list');
 
         // Answer.
-        $editor_options = [
+        $editordefinition = [
             'subdirs' => 0,
             'maxbytes' => 0,
             'maxfiles' => 0,
             'changeformat' => 1,
-            'context'=> null,
-            'noclean'=> 0,
-            'trusttext'=> 0,
+            'context' => null,
+            'noclean' => 0,
+            'trusttext' => 0,
             'enable_filemanagement' => true,
         ];
-        $mform->addElement('editor', 'answer', get_string('label:faq_answer', 'block_faq_list'), null, $editor_options);
+        $mform->addElement('editor', 'answer', get_string('label:faq_answer', 'block_faq_list'), null, $editordefinition);
         $mform->setType('answer', PARAM_RAW);
         $mform->addRule('answer', get_string('error:required', 'block_faq_list'), 'required', null, 'client');
         $mform->addRule('answer', get_string('error:required', 'block_faq_list'), 'required', null, 'client');
@@ -70,12 +73,16 @@ class faq_item_form extends moodleform {
         $this->add_action_buttons();
     }
 
-
-    public function validation($data, $files)
-    {
+    /**
+     * Performs validation of the form information
+     *
+     * @param array $data
+     * @param array $files
+     * @return array An array of $errors.
+     */
+    public function validation($data, $files) {
         $errors = parent::validation($data, $files);
 
         return $errors;
     }
-
 }

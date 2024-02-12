@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Delete existing FAQ item.
+ * Delete existing FAQ list item.
  *
  * File         faq_item_delete.php
  * Encoding     UTF-8
@@ -30,9 +30,9 @@
 use block_faq_list\faq_item;
 use block_faq_list\forms\faq_item_delete_form;
 
-require ('../../../config.php');
-require_once("$CFG->libdir/formslib.php");
-require_once ($CFG->libdir.'/adminlib.php');
+require('../../../config.php');
+require_once($CFG->libdir . '/formslib.php');
+require_once($CFG->libdir . '/adminlib.php');
 
 global $CFG, $USER, $DB, $OUTPUT, $PAGE;
 
@@ -43,36 +43,33 @@ require_login();
 $PAGE->set_context(context_system::instance());
 $PAGE->set_pagelayout('admin');
 
-$faq_item = new faq_item();
+$faqitem = new faq_item();
 
-$faq_item_id = optional_param('faq_item_id', null, PARAM_INT);
+$faqitemid = optional_param('faq_item_id', null, PARAM_INT);
 
-$redirect_url  =new moodle_url('/blocks/faq_list/view/faq_list_items.php', []);
+$redirecturl  = new moodle_url('/blocks/faq_list/view/faq_list_items.php', []);
 
-if($faq_item_id) {
-    $faq_item_data = $faq_item->get_by_id($faq_item_id);
-    $faq_item_delete_form = new faq_item_delete_form();
-    $faq_item_delete_form->set_data($faq_item_data);
-}
-
-else {
-    $faq_item_delete_form = new faq_item_delete_form();
-    if ($faq_item_delete_form->is_cancelled()) {
-        redirect($redirect_url);
+if ($faqitemid) {
+    $faqitemdata = $faqitem->get_by_id($faqitemid);
+    $faqitemdeleteform = new faq_item_delete_form();
+    $faqitemdeleteform->set_data($faqitemdata);
+} else {
+    $faqitemdeleteform = new faq_item_delete_form();
+    if ($faqitemdeleteform->is_cancelled()) {
+        redirect($redirecturl);
     }
 }
 
-if ($data = $faq_item_delete_form->get_data()) {
-    // validation
-    if($data->id) {
-        $faq_item->delete($data->id);
-        redirect($redirect_url,
+if ($data = $faqitemdeleteform->get_data()) {
+    // Validation.
+    if ($data->id) {
+        $faqitem->delete($data->id);
+        redirect($redirecturl,
             get_string('msg_faq_item_deleted', 'block_faq_list'),
             0,
             'info');
-    }
-    else {
-        redirect($redirect_url,
+    } else {
+        redirect($redirecturl,
             get_string('msg_faq_item_not_exist', 'block_faq_list'),
             0,
             'error');
@@ -85,6 +82,6 @@ $PAGE->set_heading($header);
 
 echo $OUTPUT->header();
 
-$faq_item_delete_form->display();
+$faqitemdeleteform->display();
 
 echo $OUTPUT->footer();

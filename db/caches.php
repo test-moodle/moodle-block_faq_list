@@ -27,11 +27,12 @@
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$definitions = array(
-    'last_edit' => array(
+defined('MOODLE_INTERNAL') || die();
+
+$definitions = [
+    'last_edit' => [ // Store information about last edited faq list.
         'mode' => cache_store::MODE_SESSION,
         'simplekeys' => true,
         'simpledata' => true,
-    ),
-
-);
+    ],
+];

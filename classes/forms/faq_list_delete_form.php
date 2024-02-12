@@ -29,15 +29,17 @@
 
 namespace block_faq_list\forms;
 
+use coding_exception;
 use moodleform;
 
-defined('MOODLE_INTERNAL') || die();
+class faq_list_delete_form extends moodleform {
 
-class faq_list_delete_form extends moodleform
-{
-
-    protected function definition()
-    {
+    /**
+     * Form definitions.
+     * @return void
+     * @throws coding_exception
+     */
+    protected function definition() {
         $mform = $this->_form;
 
         // Header - question to delete.
@@ -49,12 +51,16 @@ class faq_list_delete_form extends moodleform
         $this->add_action_buttons(true, get_string('button:delete_faq_list', 'block_faq_list'));
     }
 
-
-    public function validation($data, $files)
-    {
+    /**
+     * Performs validation of the form information
+     *
+     * @param array $data
+     * @param array $files
+     * @return array An array of $errors.
+     */
+    public function validation($data, $files) {
         $errors = parent::validation($data, $files);
 
         return $errors;
     }
-
 }
