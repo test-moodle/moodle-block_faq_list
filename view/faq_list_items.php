@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Display items (questions and answers) for selected FAQ list.
+ * Display faq list items (questions and answers) for selected FAQ list.
  *
  * File         faq_list_items.php
  * Encoding     UTF-8
@@ -28,12 +28,11 @@
  */
 
 use block_faq_list\faq_item;
-use block_faq_list\faq_list;
 
-require ('../../../config.php');
+require('../../../config.php');
 
 
-require_once ($CFG->libdir.'/adminlib.php');
+require_once($CFG->libdir . '/adminlib.php');
 global $CFG, $USER, $DB, $OUTPUT, $PAGE;
 
 $PAGE->set_url('/blocks/faq_list/view/faq_list_items.php');
@@ -41,32 +40,32 @@ $PAGE->set_url('/blocks/faq_list/view/faq_list_items.php');
 require_login();
 $PAGE->set_context(context_system::instance());
 
-$faq_item = new faq_item();
+$faqitem = new faq_item();
 
 $action = optional_param('action', null, PARAM_ALPHA);
 
-$faq_list_id = optional_param('list_id', null, PARAM_INT);
-$faq_lang = optional_param('faq_lang', null, PARAM_ALPHA);
-$faq_item_id = optional_param('faq_item_id', null, PARAM_INT);
+$faqlistid = optional_param('list_id', null, PARAM_INT);
+$faqlang = optional_param('faq_lang', null, PARAM_ALPHA);
+$faqitemid = optional_param('faq_item_id', null, PARAM_INT);
 
-if ($faq_list_id) {
-    $faq_item->helper->set_last_edit_faq_list_id($faq_list_id);
+if ($faqlistid) {
+    $faqitem->helper->set_last_edit_faq_list_id($faqlistid);
 }
 
-if ($faq_lang) {
-    $faq_item->helper->set_last_edit_faq_lang($faq_lang);
+if ($faqlang) {
+    $faqitem->helper->set_last_edit_faq_lang($faqlang);
 }
 
 if ($action) {
     switch ($action) {
         case 'moveitemdown':
-            if ($faq_item_id) {
-                $faq_item->movedown($faq_item_id);
+            if ($faqitemid) {
+                $faqitem->movedown($faqitemid);
             };
             break;
         case 'moveitemup':
-            if($faq_item_id) {
-                $faq_item->moveup($faq_item_id);
+            if ($faqitemid) {
+                $faqitem->moveup($faqitemid);
             }
             break;
     }
@@ -74,9 +73,9 @@ if ($action) {
 }
 
 
-$current_list_id = $faq_item->helper->get_last_edit_faq_list_id();
-$current_faq_lang = $faq_item->helper->get_last_edit_faq_lang();
-$current_faq_list_title = $faq_item->get_title($current_list_id, $current_faq_lang);
+$currentlistid = $faqitem->helper->get_last_edit_faq_list_id();
+$currentfaqlang = $faqitem->helper->get_last_edit_faq_lang();
+$currentfaqlisttitle = $faqitem->get_title($currentlistid, $currentfaqlang);
 
 $PAGE->set_pagelayout('admin');
 
@@ -90,15 +89,15 @@ $table = new html_table();
 
 $table->head = [
     get_string('label:col_faq_item', 'block_faq_list'),
-    '', // move down
-    '', // move up
+    '', // Move down.
+    '', // Move up.
     get_string('label:col_action_edit', 'block_faq_list'),
     get_string('label:col_action_delete', 'block_faq_list'),
 ];
 
-$table_rows = [];
-$records = $faq_item->get_items($current_list_id, $current_faq_lang);
-$faq_items_num = sizeof($records);
+$rows = [];
+$records = $faqitem->get_items($currentlistid, $currentfaqlang);
+$faqitemscount = count($records);
 $i = 0;
 
 foreach ($records as $id => $record) {
@@ -107,87 +106,92 @@ foreach ($records as $id => $record) {
     $movedownicon = '';
     $moveupicon = '';
 
-    $url_param = [
+    $urlparam = [
         'faq_item_id' => $record->id,
     ];
 
-    $view_url = new moodle_url('/blocks/faq_list/view/faq_item_manage.php', $url_param);
+    $viewurl = new moodle_url('/blocks/faq_list/view/faq_item_manage.php', $urlparam);
 
-    if($i < $faq_items_num) {
+    if ($i < $faqitemscount) {
         // Link to move down item.
-        $params = array_merge($url_param, ['action' => 'moveitemdown']);
+        $params = array_merge($urlparam, ['action' => 'moveitemdown']);
         $movedownlink = new moodle_url($PAGE->url, $params);
-        $movedownicon = $OUTPUT->action_icon($movedownlink, new \pix_icon('t/down', get_string('button:edit_faq_item', 'block_faq_list')));
+        $movedownicon = $OUTPUT->action_icon($movedownlink,
+                new \pix_icon('t/down', get_string('button:edit_faq_item', 'block_faq_list')));
     }
 
-    if($i > 1) {
+    if ($i > 1) {
         // Link to move down item.
-        $params = array_merge($url_param, ['action' => 'moveitemup']);
+        $params = array_merge($urlparam, ['action' => 'moveitemup']);
         $moveuplink = new moodle_url($PAGE->url, $params);
-        $moveupicon = $OUTPUT->action_icon($moveuplink, new \pix_icon('t/up', get_string('button:edit_faq_item', 'block_faq_list')));
+        $moveupicon = $OUTPUT->action_icon($moveuplink,
+                new \pix_icon('t/up', get_string('button:edit_faq_item', 'block_faq_list')));
     }
 
     // Link to edit faq item.
-    $editlink = new moodle_url('/blocks/faq_list/view/faq_item_manage.php', $url_param);
-    $editicon = $OUTPUT->action_icon($editlink, new \pix_icon('t/edit', get_string('button:edit_faq_item', 'block_faq_list')));
+    $editlink = new moodle_url('/blocks/faq_list/view/faq_item_manage.php', $urlparam);
+    $editicon = $OUTPUT->action_icon($editlink,
+            new \pix_icon('t/edit', get_string('button:edit_faq_item', 'block_faq_list')));
 
-    //Link to delete faq item.
-    $params = array_merge($url_param, ['action' => 'deleteitem']);
+    // Link to delete faq item.
+    $params = array_merge($urlparam, ['action' => 'deleteitem']);
     $deletelink = new moodle_url('/blocks/faq_list/view/faq_item_delete.php', $params);
-    $deleteicon = $OUTPUT->action_icon($deletelink, new \pix_icon('t/delete', get_string('button:delete_faq_item', 'block_faq_list')));
+    $deleteicon = $OUTPUT->action_icon($deletelink,
+            new \pix_icon('t/delete', get_string('button:delete_faq_item', 'block_faq_list')));
 
-    $question_answer = '';
-    $question_answer .= html_writer::tag('h3', $record->question, []);
-    $question_answer .= html_writer::tag('div', $record->answer, []);
+    $faqitemtext = '';
+    $faqitemtext .= html_writer::tag('h3', $record->question, []);
+    $faqitemtext .= html_writer::tag('div', $record->answer, []);
 
-    $table_row = [
-        //html_writer::link($view_url, $record->shortname),
-        $question_answer,
+    $row = [
+        $faqitemtext,
         $movedownicon,
         $moveupicon,
         $editicon,
         $deleteicon,
     ];
-    $table_rows[] = $table_row;
+    $rows[] = $row;
 }
 
-$table->data = $table_rows;
+$table->data = $rows;
 
-$options = $faq_item->get_available_faq_list_dropdown_options();
-echo $OUTPUT->single_select($PAGE->url, 'list_id', $options, $current_list_id);
-echo html_writer::tag('hr','', []);
+$options = $faqitem->get_available_faq_list_dropdown_options();
+echo $OUTPUT->single_select($PAGE->url, 'list_id', $options, $currentlistid);
+echo html_writer::tag('hr', '', []);
 
-$faq_title = get_string('header:faq_title', 'block_faq_list');
-$faq_title .= ': ';
-if ($current_faq_list_title) {
-    $faq_title .= $current_faq_list_title->title;
-}
-else {
-    $faq_title .= '/';
-}
-
-echo html_writer::tag('h2', $faq_title, []);
-
-if ($current_faq_list_title) {
-    $action_url = new moodle_url('/blocks/faq_list/view/faq_list_title.php', ['faq_title_id' => $current_faq_list_title->id]);
-    echo $OUTPUT->single_button($action_url,get_string('button:edit_faq_title', 'block_faq_list'), 'POST', ['type' => 'warning']);
-
-}
-else {
-    $action_url = new moodle_url('/blocks/faq_list/view/faq_list_title.php');
-    echo $OUTPUT->single_button($action_url,get_string('button:add_faq_title', 'block_faq_list'), 'POST', ['type' => 'info']);
-
+$faqtitletext = get_string('header:faq_title', 'block_faq_list');
+$faqtitletext .= ': ';
+if ($currentfaqlisttitle) {
+    $faqtitletext .= $currentfaqlisttitle->title;
+} else {
+    $faqtitletext .= '/';
 }
 
-$tabs = $faq_item->helper->get_faq_list_items_language_tabs();
-echo $OUTPUT->tabtree($tabs, 'faq_lang_' . $faq_item->helper->get_last_edit_faq_lang());
+echo html_writer::tag('h2', $faqtitletext, []);
+
+if ($currentfaqlisttitle) {
+    $actionurl = new moodle_url('/blocks/faq_list/view/faq_list_title.php', ['faq_title_id' => $currentfaqlisttitle->id]);
+    echo $OUTPUT->single_button($actionurl,
+            get_string('button:edit_faq_title', 'block_faq_list'), 'POST', ['type' => 'warning']);
+
+} else {
+    $actionurl = new moodle_url('/blocks/faq_list/view/faq_list_title.php');
+    echo $OUTPUT->single_button($actionurl,
+            get_string('button:add_faq_title', 'block_faq_list'), 'POST', ['type' => 'info']);
+
+}
+
+$tabs = $faqitem->helper->get_faq_list_items_language_tabs();
+echo $OUTPUT->tabtree($tabs, 'faq_lang_' . $faqitem->helper->get_last_edit_faq_lang());
 
 echo html_writer::table($table);
 
-$action_url = new moodle_url('/blocks/faq_list/view/faq_item_manage.php');
-echo $OUTPUT->single_button($action_url,get_string('button:add_faq_item', 'block_faq_list'), 'POST', ['type' => 'success']);
+$actionurl = new moodle_url('/blocks/faq_list/view/faq_item_manage.php');
+echo $OUTPUT->single_button($actionurl,
+        get_string('button:add_faq_item', 'block_faq_list'), 'POST', ['type' => 'success']);
 
-$action_url = new moodle_url('/blocks/faq_list/view/faq_lists.php');
-echo $OUTPUT->single_button($action_url,get_string('button:back_to_faq_list', 'block_faq_list'), 'POST', ['type' => 'danger']);
+$actionurl = new moodle_url('/blocks/faq_list/view/faq_lists.php');
+echo $OUTPUT->single_button($actionurl,
+        get_string('button:back_to_faq_list', 'block_faq_list'), 'POST', ['type' => 'danger']);
 
 echo $OUTPUT->footer();

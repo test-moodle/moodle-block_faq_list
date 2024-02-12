@@ -29,189 +29,288 @@
 
 namespace block_faq_list;
 
-use block_faq_list\helper;
+use dml_exception;
 use stdClass;
 
 class faq_list {
 
-    public $DB;
+    public $db;
 
+    /** @var helper Helper class instance. */
     public $helper;
 
-    public $table;
+    /** @var string Database table name, which store faq lists. */
+    public $tablelists;
 
-    public $table_titles;
+    /** @var string Database table name, which store faq list title translations. */
+    public $tabletitles;
 
-    public $table_items;
+    /** @var string Database table name, which store multi-language faq list items (questions and answers). */
+    public $tableitems;
 
+    /**
+     * Constructor.
+     */
     public function __construct() {
         global $DB;
-        $this->DB = $DB;
+        $this->db = $DB;
         $this->helper = new helper();
-        $this->table = 'faq_list';
-        $this->table_titles = 'faq_list_title';
-        $this->table_items = 'faq_list_item';
+        $this->tablelists = 'faq_list';
+        $this->tabletitles = 'faq_list_title';
+        $this->tableitems = 'faq_list_item';
     }
 
-    public function exist($shortname){
+    /**
+     * Check if faq list with given shortname exist.
+     *
+     * @param string $shortname Id of faq list.
+     * @return bool True if exist otherwise false.
+     * @throws dml_exception A DML specific exception is thrown for any errors.
+     */
+    public function exist($shortname) {
         $conditions = [
-            'shortname' => $shortname,
+                'shortname' => $shortname,
         ];
 
-        return $this->DB->record_exists($this->table, $conditions);
+        return $this->db->record_exists($this->tablelists, $conditions);
     }
 
+    /**
+     * Get faq list object with given shortname.
+     *
+     * @param string $shortname Shortname of faq list.
+     * @return stdClass|false Faq list object otherwise false.
+     * @throws dml_exception A DML specific exception is thrown for any errors.
+     */
     public function get_by_shortname($shortname) {
         $conditions = [
-            'shortname' => $shortname,
+                'shortname' => $shortname,
         ];
-        if($this->DB->record_exists($this->table, $conditions)) {
-            return $this->DB->get_record($this->table, $conditions);
+        if ($this->db->record_exists($this->tablelists, $conditions)) {
+            return $this->db->get_record($this->tablelists, $conditions);
         }
         return false;
     }
 
+    /**
+     * Get faq list object with given id.
+     * @param int $id Id of faq list.
+     * @return stdClass|bool Faq list object otherwise false.
+     * @throws dml_exception A DML specific exception is thrown for any errors.
+     */
     public function get_by_id($id) {
         $conditions = [
-            'id' => $id,
+                'id' => $id,
         ];
-        if($this->DB->record_exists($this->table, $conditions)) {
-            return $this->DB->get_record($this->table, $conditions);
+        if ($this->db->record_exists($this->tablelists, $conditions)) {
+            return $this->db->get_record($this->tablelists, $conditions);
         }
         return false;
     }
 
+    /**
+     * Get all faq lists.
+     * @return array Array of all faq lists.
+     * @throws dml_exception A DML specific exception is thrown for any errors.
+     */
     public function get_all() {
-        return $this->DB->get_records($this->table, []);
+        return $this->db->get_records($this->tablelists, []);
     }
 
-    public function get_items($list_id, $lang = null) {
+    /**
+     * Get all faq list items (questions and answers) for selected faq list id.
+     * @param int $faqlistid Id of faq list.
+     * @param string $lang Selected language.
+     * @return array Array of faq items.
+     * @throws dml_exception A DML specific exception is thrown for any errors.
+     */
+    public function get_items($faqlistid, $lang = null) {
         if (!$lang) {
             $lang = current_language();
         }
 
         $conditions = [
-            'list_id' => $list_id,
-            'lang' => $lang,
+                'list_id' => $faqlistid,
+                'lang' => $lang,
         ];
 
-        return $this->DB->get_records($this->table_items, $conditions, 'sortorder');
+        return $this->db->get_records($this->tableitems, $conditions, 'sortorder');
     }
 
-    public function create($faq_list) {
+    /**
+     * Create new faq list.
+     * @param stdClass $faqlist Faq list object.
+     * @return int|false Return id of successfully created faq list, otherwise false.
+     * @throws dml_exception A DML specific exception is thrown for any errors.
+     */
+    public function create($faqlist) {
         $data = new stdClass();
-        $data->shortname = $faq_list->shortname;
-        //$faq_group_data->description = $data->description;
+        $data->shortname = $faqlist->shortname;
 
-        return $this->DB->insert_record($this->table, $data, true);
+        return $this->db->insert_record($this->tablelists, $data, true);
     }
 
-    public function update($faq_list) {
+    /**
+     * Update existing faq list.
+     * @param stdClass $faqlist Faq list object.
+     * @return bool True.
+     * @throws dml_exception A DML specific exception is thrown for any errors.
+     */
+    public function update($faqlist) {
         $data = new stdClass();
-        $data->id = $faq_list->id;
-        $data->shortname = $faq_list->shortname;
-        //$faq_group_data->description = $data->description;
+        $data->id = $faqlist->id;
+        $data->shortname = $faqlist->shortname;
 
-        return $this->DB->update_record($this->table, $data);
+        return $this->db->update_record($this->tablelists, $data);
     }
 
+    /**
+     * Delete existing faq list with selected $id and all items of it.
+     * @param int $id Id of faq list.
+     * @return void
+     * @throws dml_exception A DML specific exception is thrown for any errors.
+     */
     public function delete($id) {
-        $this->DB->delete_records($this->table, ['id' => $id]);
-        $this->DB->delete_records($this->table_titles, ['list_id' => $id]);
-        $this->DB->delete_records($this->table_items, ['list_id' => $id]);
+        $this->db->delete_records($this->tablelists, ['id' => $id]);
+        $this->db->delete_records($this->tabletitles, ['list_id' => $id]);
+        $this->db->delete_records($this->tableitems, ['list_id' => $id]);
     }
 
-    public function get_available_faq_list_dropdown_options(){
+    /**
+     * Get available faq lists array.
+     * @return array Array of all available faq lists with structure ['id'] => shortname.
+     * @throws dml_exception A DML specific exception is thrown for any errors.
+     */
+    public function get_available_faq_list_dropdown_options() {
         $data = [];
-        $faq_lists = $this->get_all();
+        $faqlists = $this->get_all();
 
-        foreach ($faq_lists as $faq_list) {
-            $data[$faq_list->id] = $faq_list->shortname;
+        foreach ($faqlists as $faqlist) {
+            $data[$faqlist->id] = $faqlist->shortname;
         }
 
         return $data;
     }
 
-    public function get_title($list_id, $lang = null) {
+    /**
+     * Get translated title for selected faq list and language.
+     * @param int $faqlistid Id of faq list.
+     * @param string $lang Selected language (default is current language).
+     * @return stdClass|false Object of translated title otherwise false.
+     * @throws dml_exception A DML specific exception is thrown for any errors.
+     */
+    public function get_title($faqlistid, $lang = null) {
         if (!$lang) {
             $lang = current_language();
         }
         $conditions = [
-            'list_id' => $list_id,
-            'lang' => $lang,
+                'list_id' => $faqlistid,
+                'lang' => $lang,
         ];
-        if ($this->DB->record_exists($this->table_titles, $conditions)) {
-            return $this->DB->get_record($this->table_titles, $conditions);
+        if ($this->db->record_exists($this->tabletitles, $conditions)) {
+            return $this->db->get_record($this->tabletitles, $conditions);
         }
 
         return false;
     }
 
-    public function get_title_by_id($title_id) {
+    /**
+     * Get faq list title by own id.
+     * @param string $faqtitleid Id of selected title.
+     * @return stdClass|false Object of selected title if exist otherwise false.
+     * @throws dml_exception
+     */
+    public function get_title_by_id($faqtitleid) {
         $conditions = [
-            'id' => $title_id,
+                'id' => $faqtitleid,
         ];
-        if ($this->DB->record_exists($this->table_titles, $conditions)) {
-            return $this->DB->get_record($this->table_titles, $conditions);
+        if ($this->db->record_exists($this->tabletitles, $conditions)) {
+            return $this->db->get_record($this->tabletitles, $conditions);
         }
         return false;
     }
 
-    public function add_title_translation($list_id, $title) {
+    /**
+     * Add faq list title translation for selected faq list.
+     * @param int $faqlistid Id of faq list.
+     * @param string $title Title translation.
+     * @return bool|int Return id of title translation otherwise false.
+     * @throws dml_exception A DML specific exception is thrown for any errors.
+     */
+    public function add_title_translation($faqlistid, $title) {
         $data = new stdClass();
-        $data->list_id = $list_id;
+        $data->list_id = $faqlistid;
         $data->lang = $this->helper->get_last_edit_faq_lang();
         $data->title = $title;
 
-        return $this->DB->insert_record($this->table_titles, $data, true);
+        return $this->db->insert_record($this->tabletitles, $data, true);
     }
 
-    public function update_title_translation($title_id, $title) {
+    /**
+     * Update selected title translation.
+     * @param int $faqtitleid Id of existing faq title translation.
+     * @param string $title Title translation.
+     * @return bool True.
+     * @throws dml_exception A DML specific exception is thrown for any errors.
+     */
+    public function update_title_translation($faqtitleid, $title) {
         $data = new stdClass();
-        $data->id = $title_id;
+        $data->id = $faqtitleid;
         $data->title = $title;
 
-        return $this->DB->update_record($this->table_titles, $data);
+        return $this->db->update_record($this->tabletitles, $data);
     }
 
-    public function export_faq_list($shortname, $show_title = false) {
+    /**
+     * Export values for template for selected faq list.
+     * @param string $shortname Shortname of selected faq list.
+     * @param bool $showtitle Display faq list title or not.
+     * @return array
+     * @throws dml_exception A DML specific exception is thrown for any errors.
+     */
+    public function export_faq_list($shortname, $showtitle = false) {
         $data = [];
 
         if (!$this->exist($shortname)) {
             return $data;
         }
 
-        $existing_list = $this->get_by_shortname($shortname);
-        $faq_list_title = $this->get_title($existing_list->id);
-        $faq_list_items = $this->get_items($existing_list->id);
+        $existingfaqlist = $this->get_by_shortname($shortname);
+        $faqlisttitle = $this->get_title($existingfaqlist->id);
+        $faqlistitems = $this->get_items($existingfaqlist->id);
 
-        $data['show_title'] = $show_title;
+        $data['show_title'] = $showtitle;
 
-        if ($show_title && $faq_list_title) {
-            $data['faq_title'] = $faq_list_title->title;
-        }
-        else {
+        if ($showtitle && $faqlisttitle) {
+            $data['faq_title'] = $faqlisttitle->title;
+        } else {
             $data['faq_title'] = '';
         }
 
-        foreach ($faq_list_items as $faq_list_item) {
+        foreach ($faqlistitems as $faqlistitem) {
             $item = [
-                'question' => $faq_list_item->question,
-                'answer' => $faq_list_item->answer,
+                    'question' => $faqlistitem->question,
+                    'answer' => $faqlistitem->answer,
             ];
             $data['faq_items'][] = $item;
         }
         return $data;
     }
 
-    public function export_faq_list_by_id($list_id, $show_title = false) {
-        $existing_list = $this->get_by_id($list_id);
+    /**
+     * Export values for template for selected faq list.
+     * @param int $faqlistid Id of selected faq list.
+     * @param bool $showtitle Display faq list title or not.
+     * @return array
+     * @throws dml_exception A DML specific exception is thrown for any errors.
+     */
+    public function export_faq_list_by_id($faqlistid, $showtitle = false) {
+        $faqlist = $this->get_by_id($faqlistid);
 
-        if($existing_list) {
-            return $this->export_faq_list($existing_list->shortname, $show_title);
+        if ($faqlist) {
+            return $this->export_faq_list($faqlist->shortname, $showtitle);
         }
 
         return [];
-
     }
 }

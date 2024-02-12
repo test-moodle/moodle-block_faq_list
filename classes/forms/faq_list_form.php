@@ -30,23 +30,22 @@
 namespace block_faq_list\forms;
 
 use block_faq_list\faq_list;
+use coding_exception;
 use moodleform;
 
-defined('MOODLE_INTERNAL') || die();
+class faq_list_form extends moodleform {
 
-class faq_list_form extends moodleform
-{
-
-    protected function definition()
-    {
+    /**
+     * Form definitions.
+     * @return void
+     * @throws coding_exception
+     */
+    protected function definition() {
         $mform = $this->_form;
-
-        $neka = $this->_customdata;
 
         // Existing faq_list id.
         $mform->addElement('hidden', 'id', 0);
         $mform->setType('id', PARAM_INT);
-
 
         // Shortname.
         $mform->addElement('text', 'shortname', get_string('label:faq_list_shortname', 'block_faq_list'));
@@ -55,39 +54,34 @@ class faq_list_form extends moodleform
         $mform->setType('shortname', PARAM_ALPHANUMEXT);
         $mform->addHelpButton('shortname', 'label:faq_list_shortname', 'block_faq_list');
 
-        /*
-        // Description.
-        $mform->addElement('text', 'description', get_string('label:faq_group_description', 'block_faq_list'));
-        $mform->setType('description', PARAM_TEXT);
-        $mform->addHelpButton('description', 'label:faq_group_description', 'block_faq_list');
-
-        */
-
         $this->add_action_buttons();
     }
 
-
-    public function validation($data, $files)
-    {
+    /**
+     * Performs validation of the form information
+     *
+     * @param array $data
+     * @param array $files
+     * @return array An array of $errors.
+     */
+    public function validation($data, $files) {
         $errors = parent::validation($data, $files);
 
-        $faq_list = new faq_list();
+        $faqlist = new faq_list();
 
         $shortname = $data['shortname'];
-        if(!$data['id']) {
-            if ($faq_list->exist($shortname)) {
+        if (!$data['id']) {
+            if ($faqlist->exist($shortname)) {
                 $errors['shortname'] = get_string('error:unique', 'block_faq_list');
             }
-        }
-        else {
-            $existing_faq_list = $faq_list->get_by_shortname($shortname);
-            if ($existing_faq_list) {
-                if($data['id'] != $existing_faq_list->id) {
+        } else {
+            $existingfaqlist = $faqlist->get_by_shortname($shortname);
+            if ($existingfaqlist) {
+                if ($data['id'] != $existingfaqlist->id) {
                     $errors['shortname'] = get_string('error:unique', 'block_faq_list');
                 }
             }
         }
         return $errors;
     }
-
 }

@@ -30,73 +30,101 @@
 namespace block_faq_list;
 
 use cache;
+use coding_exception;
+use moodle_exception;
 
 class helper {
 
-    private $DB;
-
+    /** @var cache Instance of cache. */
     private $cache;
 
-    private $table;
-
-    private $table_titles;
-
-    private $table_items;
-
+    /**
+     * Constructor.
+     */
     public function __construct() {
-        global $DB;
-        $this->DB = $DB;
         $this->cache = cache::make('block_faq_list', 'last_edit');
-        $this->table = 'faq_list';
-        $this->table_titles = 'faq_list_title';
-        $this->table_items = 'faq_list_item';
     }
 
-    // Cache funtions.
+    /**
+     * Get last edited faq list id from session cache.
+     *
+     * @return int|false Id or false.
+     * @throws coding_exception
+     */
     public function get_last_edit_faq_list_id() {
         return $this->cache->get('faq_list_id');
     }
 
-    public function set_last_edit_faq_list_id($list_id) {
-        return $this->cache->set('faq_list_id', (int)$list_id);
+    /**
+     * Set last edited faq list id to session cache.
+     * @param int $faqlistid Id of faq list.
+     * @return bool
+     */
+    public function set_last_edit_faq_list_id($faqlistid) {
+        return $this->cache->set('faq_list_id', (int)$faqlistid);
     }
 
+    /**
+     * Get last edited faq list item id from session cache.
+     * @return int|false Id or false.
+     * @throws coding_exception
+     */
     public function get_last_edit_faq_item_id() {
         return $this->cache->get('faq_item_id');
     }
 
-    public function set_last_edit_faq_item_id($item_id) {
-        return $this->cache->set('faq_item_id', (int)$item_id);
+    /**
+     * Set last edited faq list item it to session cache.
+     * @param int $faqitemid Id of faq list item.
+     * @return bool
+     */
+    public function set_last_edit_faq_item_id($faqitemid) {
+        return $this->cache->set('faq_item_id', (int)$faqitemid);
     }
 
+    /**
+     * Get last edited faq list language from session cache.
+     * @return string|false Lang-code of faq list or false.
+     * @throws coding_exception
+     */
     public function get_last_edit_faq_lang() {
-        if($this->cache->get('faq_lang')) {
+        if ($this->cache->get('faq_lang')) {
             return $this->cache->get('faq_lang');
         }
 
-        $current_language = current_language();
-        $this->set_last_edit_faq_lang($current_language);
-        return $current_language;
+        $currentlanguage = current_language();
+        $this->set_last_edit_faq_lang($currentlanguage);
+        return $currentlanguage;
     }
 
-    public function set_last_edit_faq_lang($lang) {
-        return $this->cache->set('faq_lang', $lang);
+    /**
+     * Set last edited faq list language to session cache.
+     * @param string $langcode Last edited faq list lang-code.
+     * @return bool
+     */
+    public function set_last_edit_faq_lang($langcode) {
+        return $this->cache->set('faq_lang', $langcode);
     }
 
+    /**
+     * Get array of tabs. All installed language packs are included.
+     * @return array Array of language tabs.
+     * @throws moodle_exception
+     */
     public function get_faq_list_items_language_tabs() {
 
         $tabs = [];
         $translations = get_string_manager()->get_list_of_translations();
 
-        foreach ($translations as $translation_id => $translation) {
-            $url = new \moodle_url('/blocks/faq_list/view/faq_list_items.php',[
-                'faq_lang' => $translation_id,
+        foreach ($translations as $translationid => $translation) {
+            $url = new \moodle_url('/blocks/faq_list/view/faq_list_items.php', [
+                'faq_lang' => $translationid,
             ]);
 
             $tabs[] = new \tabobject(
-                'faq_lang_' . $translation_id,
+                'faq_lang_' . $translationid,
                 $url,
-                strtoupper($translation_id),
+                strtoupper($translationid),
                 $translation,
                 false,
             );

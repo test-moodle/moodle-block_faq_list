@@ -31,9 +31,9 @@ use block_faq_list\faq_list;
 use block_faq_list\forms\faq_list_form;
 use core\output\notification;
 
-require ('../../../config.php');
-require_once("$CFG->libdir/formslib.php");
-require_once ($CFG->libdir.'/adminlib.php');
+require('../../../config.php');
+require_once($CFG->libdir . '/formslib.php');
+require_once($CFG->libdir . '/adminlib.php');
 
 global $CFG, $USER, $DB, $OUTPUT, $PAGE;
 
@@ -44,37 +44,34 @@ $PAGE->set_context(context_system::instance());
 
 $PAGE->set_pagelayout('admin');
 
-$faq_list = new faq_list();
-$faq_list_form = new faq_list_form();
+$faqlist = new faq_list();
+$faqlistform = new faq_list_form();
 
 
 $action = optional_param('action', null, PARAM_ALPHA);
-$faq_list_id = optional_param('list_id', null, PARAM_INT);
+$faqlistid = optional_param('list_id', null, PARAM_INT);
 
 $header = get_string('header:faq_list_add', 'block_faq_list');
 $PAGE->set_title($header);
 $PAGE->set_heading($header);
 
-$redirect_url  =new moodle_url('/blocks/faq_list/view/faq_lists.php', []);
+$redirecturl  = new moodle_url('/blocks/faq_list/view/faq_lists.php', []);
 
 
-if($faq_list_form->is_cancelled()) {
+if ($faqlistform->is_cancelled()) {
     // Redirect to list of faq lists.
-    redirect($redirect_url);
-}
-
-elseif ($data = $faq_list_form->get_data()) {
-    // validation
-    if($data->id) {
-        $faq_list->update($data);
-        redirect($redirect_url,
+    redirect($redirecturl);
+} else if ($data = $faqlistform->get_data()) {
+    // Validation.
+    if ($data->id) {
+        $faqlist->update($data);
+        redirect($redirecturl,
             get_string('msg_faq_list_updated', 'block_faq_list'),
             0,
             notification::NOTIFY_SUCCESS);
-    }
-    else {
-        $faq_list->create($data);
-        redirect($redirect_url,
+    } else {
+        $faqlist->create($data);
+        redirect($redirecturl,
             get_string('msg_faq_list_created', 'block_faq_list'),
             0,
             notification::NOTIFY_SUCCESS);
@@ -82,14 +79,13 @@ elseif ($data = $faq_list_form->get_data()) {
 
 }
 
-if ($faq_list_id) {
-    $existing_faq_list =  $faq_list->get_by_id($faq_list_id);
+if ($faqlistid) {
+    $existingfaqlist = $faqlist->get_by_id($faqlistid);
 
-    if($existing_faq_list) {
-        $faq_list_form->set_data($existing_faq_list);
-    }
-    else {
-        redirect($redirect_url,
+    if ($existingfaqlist) {
+        $faqlistform->set_data($existingfaqlist);
+    } else {
+        redirect($redirecturl,
             get_string('msg_faq_list_not_exist', 'block_faq_list'),
             0,
             notification::NOTIFY_ERROR
@@ -99,6 +95,6 @@ if ($faq_list_id) {
 
 echo $OUTPUT->header();
 
-$faq_list_form->display();
+$faqlistform->display();
 
 echo $OUTPUT->footer();

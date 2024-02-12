@@ -13,8 +13,6 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
-use block_faq_list\faq_list;
-
 
 /**
  * Edit form for each block instance.
@@ -29,49 +27,67 @@ use block_faq_list\faq_list;
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use block_faq_list\faq_list;
+
 class block_faq_list_edit_form extends block_edit_form {
 
+    /**
+     * Form definitions for each block instance
+     * @param $mform
+     * @return void
+     * @throws coding_exception
+     * @throws dml_exception
+     */
     protected function specific_definition($mform) {
 
+        $hasconfig = $this->block->config;
 
-        $has_config = $this->block->config;
+        $faqlist = new faq_list();
 
-        $faq_list = new faq_list();
+        $availablefaqlists = $faqlist->get_available_faq_list_dropdown_options();
 
-        $choices = $faq_list->get_available_faq_list_dropdown_options();
-
-        $mform->addElement('select', 'config_faq_list_id', get_string('label:config_faq_list_id', 'block_faq_list'), $choices);
+        $mform->addElement('select',
+                'config_faq_list_id',
+                get_string('label:config_faq_list_id', 'block_faq_list'),
+                $availablefaqlists
+        );
         $mform->setType('config_faq_list_id', PARAM_ALPHANUM);
 
-        $show_title_choices = [];
-        $show_title_choices[] = $mform->createElement('radio', 'show_title', '', get_string('yes'), true);
-        $show_title_choices[] = $mform->createElement('radio', 'show_title', '', get_string('no'), false);
-        $mform->addGroup($show_title_choices, 'config_show_title', 'Display faq title');
+        $showtitleoptions = [];
+        $showtitleoptions[] = $mform->createElement('radio', 'show_title', '', get_string('yes'), true);
+        $showtitleoptions[] = $mform->createElement('radio', 'show_title', '', get_string('no'), false);
+        $mform->addGroup($showtitleoptions, 'config_show_title', 'Display faq title');
         $mform->setType('config_show_title', PARAM_BOOL);
 
-        $display_choices = [
+        $displayoptions = [
             'default' => 'Default',
             'type_1' => 'Prikaz moznosti 1',
             'type_2' => 'Prikaz moznosti 2',
         ];
 
-        $mform->addElement('select', 'config_display_type', get_string('label:config_display_type', 'block_faq_list'), $display_choices);
+        $mform->addElement('select',
+                'config_display_type',
+                get_string('label:config_display_type', 'block_faq_list'),
+                $displayoptions
+        );
         $mform->setType('config_display_type', PARAM_ALPHANUMEXT);
 
-        if($has_config) {
-            $mform->setDefault('faq_list_id',$has_config->faq_list_id);
-            $mform->setDefault('show_title', (bool)$has_config->show_title);
-            $mform->setDefault('display_type', $has_config->display_type);
-        }
-        else {
-            //$mform->setDefault('display_type', 'default');
+        if ($hasconfig) {
+            $mform->setDefault('faq_list_id', $hasconfig->faq_list_id);
+            $mform->setDefault('show_title', (bool)$hasconfig->show_title);
+            $mform->setDefault('display_type', $hasconfig->display_type);
         }
     }
 
-
-    //public function validation($data, $files) {
-    //    return $this->validation($data, $files);
-    //}
+    /**
+     * Performs validation of the form information
+     * @param $data
+     * @param $files
+     * @return mixed
+     */
+    public function validation($data, $files) {
+        return $this->validation($data, $files);
+    }
 
     /**
      * Display the configuration form when block is being added to the page
