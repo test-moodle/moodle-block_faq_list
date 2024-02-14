@@ -80,16 +80,6 @@ class block_faq_list_edit_form extends block_edit_form {
     }
 
     /**
-     * Performs validation of the form information
-     * @param $data
-     * @param $files
-     * @return mixed
-     */
-    public function validation($data, $files) {
-        return $this->validation($data, $files);
-    }
-
-    /**
      * Display the configuration form when block is being added to the page
      *
      * @return bool
