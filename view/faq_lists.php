@@ -96,6 +96,6 @@ $table->data = $tablerows;
 echo html_writer::table($table);
 
 $urlaction = new moodle_url('/blocks/faq_list/view/faq_list_manage.php');
-echo $OUTPUT->single_button($urlaction, get_string('header:faq_list_add', 'block_faq_list'), 'POST');
+echo $OUTPUT->single_button($urlaction, get_string('header:faq_list_add', 'block_faq_list'), 'POST', ['type' => 'primary']);
 
 echo $OUTPUT->footer();

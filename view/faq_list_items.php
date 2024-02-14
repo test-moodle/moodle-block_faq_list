@@ -140,7 +140,7 @@ foreach ($records as $id => $record) {
             new \pix_icon('t/delete', get_string('button:delete_faq_item', 'block_faq_list')));
 
     $faqitemtext = '';
-    $faqitemtext .= html_writer::tag('h3', $record->question, []);
+    $faqitemtext .= html_writer::tag('h5', $record->question, []);
     $faqitemtext .= html_writer::tag('div', $record->answer, []);
 
     $row = [
@@ -167,19 +167,22 @@ if ($currentfaqlisttitle) {
     $faqtitletext .= '/';
 }
 
+echo html_writer::start_div('d-flex');
 echo html_writer::tag('h2', $faqtitletext, []);
-
+echo html_writer::start_div('ml-2');
 if ($currentfaqlisttitle) {
     $actionurl = new moodle_url('/blocks/faq_list/view/faq_list_title.php', ['faq_title_id' => $currentfaqlisttitle->id]);
     echo $OUTPUT->single_button($actionurl,
-            get_string('button:edit_faq_title', 'block_faq_list'), 'POST', ['type' => 'warning']);
+            get_string('button:edit_faq_title', 'block_faq_list'), 'POST', ['type' => 'secondary']);
 
 } else {
     $actionurl = new moodle_url('/blocks/faq_list/view/faq_list_title.php');
     echo $OUTPUT->single_button($actionurl,
-            get_string('button:add_faq_title', 'block_faq_list'), 'POST', ['type' => 'info']);
+            get_string('button:add_faq_title', 'block_faq_list'), 'POST', ['type' => 'primary']);
 
 }
+echo html_writer::end_div();
+echo html_writer::end_div();
 
 $tabs = $faqitem->helper->get_faq_list_items_language_tabs();
 echo $OUTPUT->tabtree($tabs, 'faq_lang_' . $faqitem->helper->get_last_edit_faq_lang());
@@ -188,10 +191,10 @@ echo html_writer::table($table);
 
 $actionurl = new moodle_url('/blocks/faq_list/view/faq_item_manage.php');
 echo $OUTPUT->single_button($actionurl,
-        get_string('button:add_faq_item', 'block_faq_list'), 'POST', ['type' => 'success']);
+        get_string('button:add_faq_item', 'block_faq_list'), 'POST', ['type' => 'primary']);
 
 $actionurl = new moodle_url('/blocks/faq_list/view/faq_lists.php');
 echo $OUTPUT->single_button($actionurl,
-        get_string('button:back_to_faq_list', 'block_faq_list'), 'POST', ['type' => 'danger']);
+        get_string('button:back_to_faq_list', 'block_faq_list'), 'POST', ['type' => 'secondary']);
 
 echo $OUTPUT->footer();

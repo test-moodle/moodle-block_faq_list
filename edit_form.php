@@ -61,7 +61,7 @@ class block_faq_list_edit_form extends block_edit_form {
 
         $displayoptions = [
             'default' => 'Default',
-            'type_1' => 'Prikaz moznosti 1',
+            'accordion' => 'Accordion',
             'type_2' => 'Prikaz moznosti 2',
         ];
 

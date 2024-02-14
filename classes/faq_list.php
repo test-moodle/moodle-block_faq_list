@@ -289,6 +289,7 @@ class faq_list {
 
         foreach ($faqlistitems as $faqlistitem) {
             $item = [
+                    'id' => $faqlistitem->id,
                     'question' => $faqlistitem->question,
                     'answer' => $faqlistitem->answer,
             ];

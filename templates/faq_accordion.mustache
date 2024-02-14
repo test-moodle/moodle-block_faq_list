@@ -1,0 +1,23 @@
+<div class="faq-wrapper">
+    {{#show_title}}
+        <h2>{{faq_title}}</h2>
+    {{/show_title}}
+
+    <div class="accordion" id="faq-accordion">
+        {{#faq_items}}
+            <div class="accordion-item bg-white border-radius">
+                <h3 class="accordion-header" id="faq-heading-{{{id}}}">
+                    <button class="accordion-button collapsed" type="button" data-toggle="collapse" data-target="#faq-content-{{{id}}}" aria-expanded="false" aria-controls="faq-content-{{{id}}}">
+                        {{{question}}}
+                    </button>
+                </h3>
+
+                <div id="faq-content-{{{id}}}" class="accordion-collapse collapse" aria-labelledby="faq-heading-{{{id}}}" data-parent="#faq-accordion">
+                    <div class="accordion-body">
+                        {{{answer}}}
+                    </div>
+                </div>
+            </div>
+        {{/faq_items}}
+    </div>
+</div>

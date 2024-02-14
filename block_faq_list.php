@@ -73,9 +73,9 @@ class block_faq_list extends block_base {
                 // Select template.
                 $templatename = 'block_faq_list/faq_list';
                 break;
-            case 'type_1':
+            case 'accordion':
                 // Select other template.
-                $templatename = 'block_faq_list/faq_list';
+                $templatename = 'block_faq_list/faq_accordion';
                 break;
             default:
                 // Select default template.
