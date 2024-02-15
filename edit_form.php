@@ -62,7 +62,7 @@ class block_faq_list_edit_form extends block_edit_form {
         $displayoptions = [
             'default' => 'Default',
             'accordion' => 'Accordion',
-            'type_2' => 'Prikaz moznosti 2',
+            'carousel' => 'Carousel',
         ];
 
         $mform->addElement('select',

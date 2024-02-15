@@ -1,3 +1,10 @@
+.faq-wrapper p:last-child,
+.faq-wrapper ul:last-child,
+.faq-wrapper ol:last-child {
+  margin-bottom: 0;
+}
+
+/* Accordion view mode styles. */
 .accordion-item {
   margin-bottom: 1rem;
 }
@@ -29,8 +36,7 @@
   border: 0;
 }
 
-.accordion-body p,
-.accordion-body ul,
-.accordion-body ol {
-  margin-bottom: 0;
+/* Slider view mode styles. */
+.faq-wrapper .carousel-indicators li {
+  background-color: #000;
 }
