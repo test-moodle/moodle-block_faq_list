@@ -1,0 +1,36 @@
+.accordion-item {
+  margin-bottom: 1rem;
+}
+
+.accordion-item:last-child {
+  margin-bottom: 0;
+}
+
+.accordion-header {
+  position: relative;
+  font-size: 1rem;
+}
+
+.accordion-header button .fa {
+  position: absolute;
+  top: calc(50% - .5em);
+  right: 1rem;
+  transition: transform ease .3s;
+}
+
+.accordion-header button:not(.collapsed) .fa {
+  transform: rotate(180deg);
+}
+
+.accordion-header button {
+  display: block;
+  background: none;
+  padding: 0;
+  border: 0;
+}
+
+.accordion-body p,
+.accordion-body ul,
+.accordion-body ol {
+  margin-bottom: 0;
+}
