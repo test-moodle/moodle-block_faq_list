@@ -45,7 +45,7 @@ class block_faq_list extends block_base {
      * initializes block
      */
     public function init() {
-        global $CFG;
+        global $CFG, $plugin;
         $this->title = get_string('blockname', 'block_faq_list');
         include($CFG->dirroot . '/blocks/faq_list/version.php');
         $this->version = $plugin->version;
@@ -98,9 +98,18 @@ class block_faq_list extends block_base {
         }
 
         $faqlist = new faq_list();
+
         $faqlistid = $this->config->faq_list_id;
-        $titleshow = (bool)$this->config->show_faq_title;
-        $displaytype = $this->config->display_type;
+        $titleshow = false;
+        $displaytype = 'default';
+
+        if (isset($this->config->show_faq__title)) {
+            $titleshow = (bool)$this->config->block_title;
+        }
+
+        if (isset($this->config->dosplay_type)) {
+            $displaytype = $this->config->dosplay_type;
+        }
 
         $templatecontext = $faqlist->export_faq_list_by_id($faqlistid, $titleshow);
 
