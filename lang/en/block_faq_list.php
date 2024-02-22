@@ -61,7 +61,17 @@ $string['tab_faq_list_add_title'] = 'Create new FAQ list or edit existing one';
 
 // Form Labels.
 $string['label:config_faq_list_id'] = 'FAQ list';
-$string['label:config_show_title'] = 'Show FAQ list title';
+$string['label:config_faq_list_id_help'] = 'Select which FAQ list will be displayed.';
+
+$string['label:config_block_title'] = 'Display block title';
+$string['label:config_block_title_help'] = 'Select how block title is displayed. If you choose display as faq title, note that this title must be provided for current language.';
+$string['label:config_block_title_none'] = 'None - hide block title';
+$string['label:config_block_title_pluginname'] = 'Display block title as pluginname';
+$string['label:config_block_title_faq'] = 'Display block title as title of selected faq list.';
+
+$string['label:config_show_faq_title'] = 'Show FAQ list title';
+$string['label:config_show_faq_title_help'] = 'Display FAQ list title or not. It is possible to show twice the same title if you are not carefully.';
+
 $string['label:config_display_type'] = 'Show FAQ list as';
 $string['label:faq_list_shortname'] = 'Unique shortname';
 $string['label:faq_list_shortname_help'] = 'Enter unique name. Allowed character are: [0-9][A-Z][a-z][_]';

@@ -44,38 +44,68 @@ class block_faq_list_edit_form extends block_edit_form {
 
         $faqlist = new faq_list();
 
+        // Selected faq list.
         $availablefaqlists = $faqlist->get_available_faq_list_dropdown_options();
-
         $mform->addElement('select',
                 'config_faq_list_id',
                 get_string('label:config_faq_list_id', 'block_faq_list'),
-                $availablefaqlists
+                $availablefaqlists,
         );
+        $mform->addHelpButton('config_faq_list_id', 'label:config_faq_list_id', 'block_faq_list');
         $mform->setType('config_faq_list_id', PARAM_ALPHANUM);
+        $mform->addRule('config_faq_list_id', get_string('error:required', 'block_faq_list'), 'required', null, 'client');
+        if (isset($this->block->config->faq_list_id)) {
+            $mform->setDefault('config_faq_list_id', $this->block->config->faq_list_id);
+        }
 
-        $showtitleoptions = [];
-        $showtitleoptions[] = $mform->createElement('radio', 'show_title', '', get_string('yes'), true);
-        $showtitleoptions[] = $mform->createElement('radio', 'show_title', '', get_string('no'), false);
-        $mform->addGroup($showtitleoptions, 'config_show_title', 'Display faq title');
-        $mform->setType('config_show_title', PARAM_BOOL);
+        // Block title display.
+        $availableblocktitles = [
+                'none' => get_string('label:config_block_title_none', 'block_faq_list'),
+                'pluginname' => get_string('label:config_block_title_pluginname', 'block_faq_list'),
+                'faqlisttitle' => get_string('label:config_block_title_faq', 'block_faq_list'),
+        ];
+        $mform->addElement('select',
+                'config_block_title',
+                get_string('label:config_block_title', 'block_faq_list'),
+                $availableblocktitles,
+        );
+        $mform->addHelpButton('config_block_title', 'label:config_block_title', 'block_faq_list');
+        $mform->setType('config_block_title', PARAM_ALPHANUM);
+        $mform->addRule('config_block_title', get_string('error:required', 'block_faq_list'), 'required', null, 'client');
+        if (isset($this->block->config->block_title)) {
+            $mform->setDefault('config_block_title', $this->block->config->block_title);
+        } else {
+            $mform->setDefault('config_block_title', 'faqlisttitle');
+        }
 
+        // FAQ list title.
+        $mform->addElement('selectyesno', 'config_show_faq_title', get_string('label:config_show_faq_title', 'block_faq_list'));
+        $mform->addHelpButton('config_show_faq_title', 'label:config_show_faq_title', 'block_faq_list');
+        $mform->setType('config_show_faq_title', PARAM_ALPHANUM);
+        $mform->addRule('config_show_faq_title', get_string('error:required', 'block_faq_list'), 'required', null, 'client');
+        if (isset($this->block->config->show_faq_title)) {
+            $mform->setDefault('config_show_faq_title', $this->block->config->show_faq_title);
+        } else {
+            $mform->setDefault('config_show_faq_title', 'no');
+        }
+
+        // Display FAQ list as.
         $displayoptions = [
             'default' => 'Default',
             'type_1' => 'Prikaz moznosti 1',
             'type_2' => 'Prikaz moznosti 2',
         ];
-
         $mform->addElement('select',
                 'config_display_type',
                 get_string('label:config_display_type', 'block_faq_list'),
                 $displayoptions
         );
         $mform->setType('config_display_type', PARAM_ALPHANUMEXT);
-
-        if ($hasconfig) {
-            $mform->setDefault('faq_list_id', $hasconfig->faq_list_id);
-            $mform->setDefault('show_title', (bool)$hasconfig->show_title);
-            $mform->setDefault('display_type', $hasconfig->display_type);
+        $mform->addRule('config_display_type', get_string('error:required', 'block_faq_list'), 'required', null, 'client');
+        if (isset($this->block->config->display_type)) {
+            $mform->setDefault('config_display_type', $this->block->config->display_type);
+        } else {
+            $mform->setDefault('config_display_type', 'default');
         }
     }
 
