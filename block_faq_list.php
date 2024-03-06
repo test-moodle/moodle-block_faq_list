@@ -40,6 +40,7 @@ use block_faq_list\faq_list;
  */
 class block_faq_list extends block_base {
 
+    private $hideblocktitle;
     /**
      * initializes block
      */
@@ -48,6 +49,43 @@ class block_faq_list extends block_base {
         $this->title = get_string('blockname', 'block_faq_list');
         include($CFG->dirroot . '/blocks/faq_list/version.php');
         $this->version = $plugin->version;
+        $this->hideblocktitle = true;
+    }
+
+    /**
+     * Do we hide the block header?
+     *
+     * @return bool false
+     */
+    public function hide_header() {
+        return $this->hideblocktitle;
+    }
+
+    public function specialization() {
+        $showblocktitle = false;
+        $showfaqtitle = false;
+
+        if (isset($this->config->block_title)) {
+            $showblocktitle = $this->config->block_title;
+        }
+
+        if (isset($this->config->show_faq_title)) {
+            $showfaqtitle = (bool)$this->config->block_title;
+        }
+
+        if ($showblocktitle === 'faqlisttitle') {
+            $faqlist = new faq_list();
+            $title = $faqlist->get_title($this->config->faq_list_id);
+            if ($title) {
+                $titletext = $title->title;
+                if (!empty($titletext)) {
+                    $this->title = $title->title;
+                    $this->hideblocktitle = false;
+                }
+            }
+        } else if ($showblocktitle === 'pluginname') {
+            $this->hideblocktitle = false;
+        }
     }
 
     /**
@@ -60,9 +98,18 @@ class block_faq_list extends block_base {
         }
 
         $faqlist = new faq_list();
+
         $faqlistid = $this->config->faq_list_id;
-        $titleshow = (bool)$this->config->show_title['show_title'];
-        $displaytype = $this->config->display_type;
+        $titleshow = false;
+        $displaytype = 'default';
+
+        if (isset($this->config->show_faq_title)) {
+            $titleshow = (bool)$this->config->show_faq_title;
+        }
+
+        if (isset($this->config->dosplay_type)) {
+            $displaytype = $this->config->dosplay_type;
+        }
 
         $templatecontext = $faqlist->export_faq_list_by_id($faqlistid, $titleshow);
 
@@ -117,15 +164,6 @@ class block_faq_list extends block_base {
      */
     public function instance_allow_multiple() {
         return true;
-    }
-
-    /**
-     * Do we hide the block header?
-     *
-     * @return bool false
-     */
-    public function hide_header() {
-        return false;
     }
 
     /**
