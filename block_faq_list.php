@@ -116,13 +116,13 @@ class block_faq_list extends block_base {
         $renderer = $this->page->get_renderer('core');
 
         switch ($displaytype) {
-            case 'type_2':
+            case 'carousel':
                 // Select template.
-                $templatename = 'block_faq_list/faq_list';
+                $templatename = 'block_faq_list/faq_carousel';
                 break;
-            case 'type_1':
+            case 'accordion':
                 // Select other template.
-                $templatename = 'block_faq_list/faq_list';
+                $templatename = 'block_faq_list/faq_accordion';
                 break;
             default:
                 // Select default template.

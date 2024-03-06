@@ -92,8 +92,8 @@ class block_faq_list_edit_form extends block_edit_form {
         // Display FAQ list as.
         $displayoptions = [
             'default' => 'Default',
-            'type_1' => 'Prikaz moznosti 1',
-            'type_2' => 'Prikaz moznosti 2',
+            'accordion' => 'Accordion',
+            'carousel' => 'Carousel',
         ];
         $mform->addElement('select',
                 'config_display_type',

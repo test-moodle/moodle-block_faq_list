@@ -287,12 +287,16 @@ class faq_list {
             $data['faq_title'] = '';
         }
 
+        $itemnumber = 0;
         foreach ($faqlistitems as $faqlistitem) {
             $item = [
-                    'question' => $faqlistitem->question,
-                    'answer' => $faqlistitem->answer,
+                'itemnumber' => $itemnumber,
+                'id' => $faqlistitem->id,
+                'question' => $faqlistitem->question,
+                'answer' => $faqlistitem->answer,
             ];
             $data['faq_items'][] = $item;
+            $itemnumber++;
         }
         return $data;
     }
