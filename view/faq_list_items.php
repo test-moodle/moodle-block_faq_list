@@ -74,6 +74,12 @@ if ($action) {
 
 
 $currentlistid = $faqitem->helper->get_last_edit_faq_list_id();
+
+if (!$currentlistid) {
+    $redirecturl = new moodle_url('/blocks/faq_list/view/faq_lists.php');
+    redirect($redirecturl);
+}
+
 $currentfaqlang = $faqitem->helper->get_last_edit_faq_lang();
 $currentfaqlisttitle = $faqitem->get_title($currentlistid, $currentfaqlang);
 

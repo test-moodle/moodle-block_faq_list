@@ -26,10 +26,12 @@
  * @author      Agiledrop 2024 <hello@agiledrop.com>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
 defined('MOODLE_INTERNAL') || die();
+
 $plugin = new stdClass();
-$plugin->version     = 2024022201;
+$plugin->version     = 2024030700;
 $plugin->requires    = 2022041900;      // YYYYMMDDHH (This is the release version for Moodle 4.0).
 $plugin->component   = 'block_faq_list';
-$plugin->release     = '1.0.0 (build 2024020500)';
+$plugin->release     = '1.0.0';
 $plugin->dependencies = [];

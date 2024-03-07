@@ -20,7 +20,7 @@
  *  File         access.php
  *  Encoding     UTF-8
  *
- * @package    theme_mtul_slim
+ * @package    block_faq_list
  * @copyright  2023 Agiledrop
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
