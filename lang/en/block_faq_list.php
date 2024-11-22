@@ -121,3 +121,7 @@ $string['msg_faq_item_deleted'] = 'Question and answer was successfully deleted.
 $string['msg_faq_item_not_exist'] = 'Question not exist.';
 
 // View strings.
+
+
+// Privacy.
+$string['privacy:metadata'] = 'The Faq list block does not store any user data.';
